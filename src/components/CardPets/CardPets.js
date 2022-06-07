@@ -5,34 +5,34 @@ import { useNavigation } from '@react-navigation/native';
 import Vector from '../../../assets/images/Vector.png';
 import DogExample from '../../../assets/images/DogExample.png';
 import { TextInput } from 'react-native-web';
-function CardPets({onPress}) {
+function CardPets({onPress, text1,text2,text3, img1, img2, img3, titulo}) {
 
     return (
         <View style={styles.container}>
             <View style={styles.Card}>
                 <TouchableOpacity onPress={onPress}>
                     <View style={styles.cardTitle}>
-                        <Text style={styles.cardText}>Cachorros adicionados recentemente</Text>
+                        <Text style={styles.cardText}>{titulo}</Text>
                         <Image source={Vector} />
                     </View>
 
                     <View style={styles.cardImage}>
-                        <Image source={DogExample}
+                        <Image source={img1}
                         />
-                        <Image source={DogExample}
+                        <Image source={img2}
                         />
-                        <Image source={DogExample}
+                        <Image source={img3}
                         />
                     </View>
                     <View style={styles.TextImage}>
                         <Text>
-                            poppy
+                            {text1}
                         </Text>
                         <Text>
-                            poppy
+                            {text2}
                         </Text>
                         <Text>
-                            poppy
+                           {text3}
                         </Text>
                     </View>
                 </TouchableOpacity>

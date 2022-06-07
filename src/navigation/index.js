@@ -11,6 +11,7 @@ import SideScreen from '../screens/SideScreen';
 import TabelaScreen from '../screens/TabelaScreen/TabelaScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen/ForgotPasswordScreen';
 import NewPasswordScreen from '../screens/NewPasswordScreen';
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
@@ -30,6 +31,7 @@ export default function Navigation() {
           <Stack.Screen name="OngsSign" component={OngsScreen}/>
           <Stack.Screen name="Side" component={SideScreen}/>
           <Stack.Screen name="Tabela" component={TabelaScreen}/>
+   
         </Stack.Navigator>
     </NavigationContainer>
 
