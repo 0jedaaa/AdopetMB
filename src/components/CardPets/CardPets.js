@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, Image, StyleSheet, Pressable } from 'react-native';
+import { Text, View, Image, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Vector from '../../../assets/images/Vector.png';
 import DogExample from '../../../assets/images/DogExample.png';
@@ -10,7 +10,7 @@ function CardPets({onPress}) {
     return (
         <View style={styles.container}>
             <View style={styles.Card}>
-                <Pressable onPress={onPress}>
+                <TouchableOpacity onPress={onPress}>
                     <View style={styles.cardTitle}>
                         <Text style={styles.cardText}>Cachorros adicionados recentemente</Text>
                         <Image source={Vector} />
@@ -35,7 +35,7 @@ function CardPets({onPress}) {
                             poppy
                         </Text>
                     </View>
-                </Pressable>
+                </TouchableOpacity>
             </View>
 
         </View>

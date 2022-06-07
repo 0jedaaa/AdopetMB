@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, Image, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, ScrollView, Alert } from 'react-native';
 import Logo from '../../../assets/images/foto.png';
 import Backg from '../../../assets/images/background-dog.png'
 import Patinha1 from '../../../assets/images/patinhas1.png';
@@ -9,31 +9,47 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import SocialSignInButton from '../../components/SocialSignInButton';
 import { useNavigation } from '@react-navigation/native';
+import { useForm } from 'react-hook-form';
+import { Auth, Controller } from 'aws-amplify';
 function NewPasswordScreen() {
-  const [code, setCode] = useState('');
-  const [newPassword, setNewPassword] = useState('');
   const navigation = useNavigation();
+  const { control, handleSubmit, watch } = useForm();
 
-
-  const onConfirmPressed = () => {
-
-    navigation.navigate('SocialScreen')
+  const onConfirmPressed = async data => {
+    try {
+      await Auth.forgotPasswordSubmit(data.username, data.code, data.password);
+      navigation.navigate('SignIn');
+    }
+    catch (e) {
+      Alert.alert('Oops', e.message);
+    }
+  //  navigation.navigate('SocialScreen')
   }
   const onBackPress = () => {
-  
+
     navigation.navigate('SignIn')
   }
 
   return (
     <ScrollView>
       <View style={styles.root}>
-       <Text style={styles.title}>Resetar Senha</Text>
+        <Text style={styles.title}>Resetar Senha</Text>
 
-        <CustomInput placeholder="Codigo de Confirmação" value={code} setValue={setCode} />
-        <CustomInput placeholder="Nova Senha" value={newPassword} setValue={setNewPassword} />
 
-        <CustomButton text="Confirmar" onPress={onConfirmPressed} />
-        <CustomButton text="Voltar" onPress={onBackPress} type="TERTIARY"/>
+        <CustomInput name="username" control={control} placeholder="Nome do Usuario" rules={{
+          required: 'Nome do Usuario Obrigatorio!'
+        }} />
+        <CustomInput name="code" control={control} placeholder="Codigo de Confirmação" rules={{
+          required: 'Codigo de Confirmação Obrigatorio!'
+        }} />
+        <CustomInput name="password" control={control} secureTextEntry={true} placeholder="Nova Senha" rules={{
+          required: 'Senha é Obrigatorio!',
+          minLength: { value: 8, message: 'Senha não pode ter menos do que 8 caracteres!' }
+
+        }} />
+
+        <CustomButton text="Confirmar" onPress={handleSubmit(onConfirmPressed)} />
+        <CustomButton text="Voltar" onPress={onBackPress} type="TERTIARY" />
         <View style={styles.patinhasView}>
           <Image
             source={Patinha2}
@@ -77,10 +93,10 @@ const styles = StyleSheet.create({
     zIndex: -2,
     position: 'absolute'
   },
-  title:{
-      fontSize: 24,
-      fontWeight: 'bold',
-      margin: 30,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    margin: 30,
   },
 });
 export default NewPasswordScreen;

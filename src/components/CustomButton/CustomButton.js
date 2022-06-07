@@ -1,15 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable,TouchableOpacity } from 'react-native';
+
 
 export default function CustomButton({ onPress, text, type = "PRIMARY", bgColor, fgColor }) {
     return (
-        <Pressable onPress={onPress} style={[styles.container, styles[`container_${type}`],
+        <>
+        <TouchableOpacity onPress={onPress} style={[styles.container, styles[`container_${type}`],
         bgColor ? { backgroundColor: bgColor } : {},
         ]}>
             <Text style={[styles.text, styles[`text_${type}`],
              fgColor ? {color: fgColor } : {},
             ]}>{text}</Text>
-        </Pressable>
+        </TouchableOpacity>
+        </>
     );
 }
 

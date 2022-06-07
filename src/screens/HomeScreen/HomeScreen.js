@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, Image, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { Text, View, Image, StyleSheet, ScrollView, Pressable, TouchableOpacity } from 'react-native';
 import DogIcon from '../../../assets/images/dogicon.png'
 import CatIcon from '../../../assets/images/caticon.png'
 import BirdIcon from '../../../assets/images/birdicon.png'
@@ -35,21 +35,21 @@ function SignInScreen() {
                     <Navbar onPress={onSideBar} />
 
                     <View style={styles.imagesView}>
-                        <Pressable onPress={onDogsPress}>
+                        <TouchableOpacity onPress={onDogsPress}>
                             <Image
                                 source={DogIcon}
                             />
-                        </Pressable>
-                        <Pressable onPress={onCatsPress}>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onCatsPress}>
                             <Image
                                 source={CatIcon}
                             />
-                        </Pressable>
-                        <Pressable onPress={onOtherPress}>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onOtherPress}>
                         <Image
                             source={BirdIcon}
                         />
-                        </Pressable>
+                        </TouchableOpacity>
 
                     </View>
                     <View style={styles.TextView}>

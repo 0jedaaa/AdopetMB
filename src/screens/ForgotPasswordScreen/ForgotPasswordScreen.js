@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, Image, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, ScrollView, Alert } from 'react-native';
 import Logo from '../../../assets/images/foto.png';
 import Backg from '../../../assets/images/background-dog.png'
 import Patinha1 from '../../../assets/images/patinhas1.png';
@@ -9,30 +9,38 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import SocialSignInButton from '../../components/SocialSignInButton';
 import { useNavigation } from '@react-navigation/native';
-function ForgotPasswordScreen() {
-  const [email, setEmail] = useState('');
+import { useForm } from 'react-hook-form';
+import { Auth, Controller } from 'aws-amplify';
+
+const  ForgotPasswordScreen = () => {
   const navigation = useNavigation();
+  const { control, handleSubmit} = useForm();
 
-
-  const onConfirmPressed = () => {
-    navigation.navigate('NewPassword')
+  const onConfirm = async data => {
+    try {
+      await Auth.forgotPassword(data.username);
+      navigation.navigate('NewPassword');
+    }
+    catch (e) {
+      Alert.alert('Oops', e.message);
+    }
   }
   const onBackPress = () => {
   
     navigation.navigate('SignUp')
   }
-  const onResendPress = () => {
-    console.warn("onResendPress");
-  }
+
   return (
     <ScrollView>
       <View style={styles.root}>
        <Text style={styles.title}>Resetar Senha</Text>
 
-        <CustomInput placeholder="E-mail" value={email} setValue={setEmail} />
+        <CustomInput name="username" control={control}  placeholder="Nome do Usuario" rules={{
+          required: 'Nome do Usuario Obrigatorio!'
+        }}/>
 
 
-        <CustomButton text="Enviar" onPress={onConfirmPressed} />
+        <CustomButton text="Enviar" onPress={handleSubmit(onConfirm)} />
         <CustomButton text="Voltar" onPress={onBackPress} type="TERTIARY"/>
         <View style={styles.patinhasView}>
           <Image

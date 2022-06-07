@@ -36,7 +36,7 @@ function SocialScreen() {
         source={Logo}
         style={styles.logo} resizeMode="contain"
       />
-     <CustomButton text="Entrar com E-mail" onPress={onSignInEmail} bgColor="#F8F8FF" fgColor="#808080" />
+     <CustomButton text="Entrar com E-mail" onPress={onSignInEmail}  bgColor="#F8F8FF" fgColor="#808080" />
       <SocialSignInButton/>
       <CustomButton text="Não tem uma conta? Cadastra-se" onPress={onSignUpPress} type="TERTIARY"/>
       <CustomButton text="PARCERIA ONG'S" onPress={onSignUpOngPress} type="TERTIARY" />

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, Image, StyleSheet, Pressable } from 'react-native';
+import { Text, View, Image, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import People from '../../../../assets/images/people-main.png';
 import { useNavigation } from '@react-navigation/native';
 

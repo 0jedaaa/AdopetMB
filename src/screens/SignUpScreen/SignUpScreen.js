@@ -1,29 +1,40 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, Image, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, ScrollView, Alert } from 'react-native';
 import Logo from '../../../assets/images/foto.png';
 import Backg from '../../../assets/images/background-dog.png'
 import Patinha1 from '../../../assets/images/patinhas1.png';
 import Patinha2 from '../../../assets/images/patinhas2.png'
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-
+import { useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
-function SignUpScreen() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [senha, setSenha] = useState('');
-  const [senhaRepeat, setSenhaRepeat] = useState('');
+import { Auth, Controller } from 'aws-amplify';
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+const SignUpScreen = () => {
+  const {control, handleSubmit, watch } = useForm();
+  const pwd = watch('password');
   const navigation = useNavigation();
 
-  const onRegisterPressed = () => {
-   
-    navigation.navigate('ConfirmEmail')
+  const onRegisterPressed = async data => {
+    const { username, password, email, name } = data;
+    try {
+      await Auth.signUp({
+        username,
+        password,
+        attributes: { email, name, preferred_username: username },
+      });
+      navigation.navigate('ConfirmEmail', {username});
+    }
+    catch (e) {
+      Alert.alert('Oops', e.message);
+    }
+
   }
 
   const onSigInPress = () => {
-    
+
     navigation.navigate('SocialScreen')
   }
 
@@ -35,12 +46,32 @@ function SignUpScreen() {
           style={styles.logo} resizeMode="contain"
         />
 
-        <CustomInput placeholder="Nome Completo" value={email} setValue={setEmail} />
-        <CustomInput placeholder="E-mail" value={email} setValue={setEmail} />
-        <CustomInput placeholder="Telefone" value={telefone} setValue={setTelefone} />
-        <CustomInput placeholder="Senha" value={senha} setValue={setSenha} secureTextEntry={true} />
 
-        <CustomButton text="Cadastrar" onPress={onRegisterPressed} />
+        <CustomInput name="name" control={control} placeholder="Nome Completo" rules={{
+          required: 'Nome Completo é Obrigatorio!',
+          minLength: { value: 3, message: 'Nome não pode ter menos do que 3 caracteres!' }
+
+        }} />
+        <CustomInput name="username" control={control} placeholder="Nome de Usuario" rules={{
+          required: 'Nome de Usuario é Obrigatorio!',
+          minLength: { value: 3, message: 'Nome não pode ter menos do que 3 caracteres!' }
+
+        }} />
+        <CustomInput name="email" control={control} placeholder="E-mail" rules={{ pattern: { value: EMAIL_REGEX, message: 'Email invalido!' } }} />
+
+        <CustomInput name="password" control={control} placeholder="Senha" secureTextEntry={true}
+          rules={{
+            required: 'Senha é Obrigatorio!',
+            minLength: { value: 8, message: 'Senha não pode ter menos do que 8 caracteres!' }
+
+          }} />
+        <CustomInput name="password-repeat" control={control} placeholder="Digite a senha novamente" secureTextEntry={true}
+          rules={{
+            validate: value => value == pwd || 'Senha não confere!',
+          }
+
+          } />
+        <CustomButton text="Cadastrar" onPress={handleSubmit(onRegisterPressed)} />
         <CustomButton text="Ja possui uma conta ? Entrar" onPress={onSigInPress} type="TERTIARY" />
 
         <View style={styles.patinhasView}>

@@ -1,10 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen/ForgotPasswordScreen';
 import React from 'react';
-
 import Navigation from './src/navigation';
-export default function App() {
+import Amplify from 'aws-amplify';
+import config from './src/aws-exports';
+
+Amplify.configure(config);
+
+function App() {
   return (
 
     <SafeAreaView style={styles.container}>
@@ -20,3 +23,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDC623',
   },
 });
+
+export default App;

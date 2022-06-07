@@ -1,42 +1,65 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, Image, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, ScrollView, Alert } from 'react-native';
 import Logo from '../../../assets/images/foto.png';
 import Backg from '../../../assets/images/background-dog.png'
 import Patinha1 from '../../../assets/images/patinhas1.png';
 import Patinha2 from '../../../assets/images/patinhas2.png'
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import SocialSignInButton from '../../components/SocialSignInButton';
-import { useNavigation } from '@react-navigation/native';
-function ConfirmEmailScreen() {
-  const [code, setCode] = useState('');
+import { useForm } from 'react-hook-form';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Auth, Controller } from 'aws-amplify';
+const ConfirmEmailScreen = () => {
+
+
+  const route = useRoute();
   const navigation = useNavigation();
 
-
-  const onConfirmPressed = () => {
-
-    navigation.navigate('SocialScreen')
+  const { control, handleSubmit, watch } = useForm({ defaultValues: { username: route?.params?.username }, });
+  const username = watch('username');
+  const onConfirmPressed = async data => {
+    try {
+      await Auth.confirmSignUp(data.username, data.code)
+      navigation.navigate('SignIn')
+    }
+    catch (e) {
+      Alert.alert('Oops', e.message);
+    }
+    //
   }
   const onBackPress = () => {
-  
+
     navigation.navigate('SignIn')
   }
-  const onResendPress = () => {
-    console.warn("onResendPress");
+  const onResendPress = async () => {
+    try {
+      await Auth.resendSignUp(username)
+      Alert.alert('Sucesso', 'Código reenviado, verifique a sua caixa de Spam do Email!');
+    }
+    catch (e) {
+      Alert.alert('Oops', e.message);
+    }
+    //console.warn("onResendPress");
   }
   return (
     <ScrollView>
       <View style={styles.root}>
-       <Text style={styles.title}>Confirmar Email</Text>
+        <Text style={styles.title}>Confirmar Email</Text>
 
-        <CustomInput placeholder="Codigo de confirmação" value={code} setValue={setCode} />
+        <CustomInput name="username" control={control} placeholder="Nome de Usuario" rules={{
+          required: 'Nome de Usuario Obrigatorio!'
+        }} />
+
+        <CustomInput name="code" control={control} placeholder="Codigo de confirmação" rules={{
+          required: 'Codigo de Verificação Obrigatorio!'
+        }} />
 
 
-        <CustomButton text="Confirmar" onPress={onConfirmPressed} />
-        <CustomButton text="Reenviar Codigo" onPress={onResendPress} type="TERTIARY"/>
-        <CustomButton text="Voltar" onPress={onBackPress} type="TERTIARY"/>
-       
+        <CustomButton text="Confirmar" onPress={handleSubmit(onConfirmPressed)} />
+        <CustomButton text="Reenviar Codigo" onPress={onResendPress} type="TERTIARY" />
+        <CustomButton text="Voltar" onPress={onBackPress} type="TERTIARY" />
+
         <View style={styles.patinhasView}>
           <Image
             source={Patinha2}
@@ -80,10 +103,10 @@ const styles = StyleSheet.create({
     zIndex: -2,
     position: 'absolute'
   },
-  title:{
-      fontSize: 24,
-      fontWeight: 'bold',
-      margin: 30,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    margin: 30,
   },
 });
 export default ConfirmEmailScreen;

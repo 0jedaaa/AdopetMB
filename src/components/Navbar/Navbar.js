@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, Image, StyleSheet, Pressable } from 'react-native';
+import { Text, View, Image, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import People from '../../../assets/images/people-main.png';
 import Menu from '../../../assets/images/menu-main.png'
 import { useNavigation } from '@react-navigation/native';
@@ -10,9 +10,9 @@ function Navbar({onPress}) {
     return (
 
             <View style={styles.navbar}>
-              <Pressable onPress={onPress}>
+              <TouchableOpacity onPress={onPress}>
                 <Image source={Menu}/>
-                </Pressable>
+                </TouchableOpacity>
                 <Image
                     source={People}
 
